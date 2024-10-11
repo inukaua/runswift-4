@@ -3,10 +3,6 @@ from util.actioncommand import walk
 from util.CircularMotion import angular_velocity
 
 
-starter_turn = ""
-epsilon = 0.1
-
-
 class WalkInCircle(BehaviourTask):
 
     """
@@ -17,10 +13,12 @@ class WalkInCircle(BehaviourTask):
     the tangent).
     """
     
-    def finish(self):
+    def _reset(self):
+        self.epsilon=0.15
+        self.start=""
         self._current_sub_task = "Stand"
 
-    def _tick(self, radius=500, forward=150, clockwise=True):
+    def _tick(self, radius=400, forward=150, clockwise=True):
         turn = angular_velocity(radius, forward) * (-1 if clockwise else 1)
-    
-    self.world.b_request.actions.body = walk(forward, 0, turn)
+
+        self.world.b_request.actions.body = walk(forward, 0, turn)
