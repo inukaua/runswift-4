@@ -77,13 +77,6 @@ void RobotDetector::detect(const VisionInfoIn& info_in, VisionInfoMiddle& info_m
     IF_RD_USING_VATNAO(
         q = vdm->getQuery();
     )
-
-#ifdef ROBOT_DETECTOR_TIMER
-    std::vector<float> timings;
-    Timer timer;
-    timer.restart();
-#endif
-
     // Declare a new info_middle so we don't edit the actual one
     VisionInfoMiddle editable_middle = info_middle;
 
@@ -93,69 +86,11 @@ void RobotDetector::detect(const VisionInfoIn& info_in, VisionInfoMiddle& info_m
     // Step 1) - Rethreshold downsampled full regions
 	runThresholding(info_in, editable_middle, newOut);
 
-  #ifdef WRITE_THRESHOLDED_REGION
-    char name[] = "a";
-    char location[] = WRITE_THRESHOLDED_REGION_DIR;
-    std::stringstream dir;
-    dir << location << num_images << ".png";
-    num_images++;
-    std::cout << "Writing binary sldkfj spot image to: " << dir.str().c_str() << "\n";
-    WriteImage w;
-    if(w.writeImage(editable_middle.full_regions[0], COLOUR_FORMAT, dir.str().c_str(), name)) {
-        std::cout << "Success\n";
-    }
-    else {
-        std::cout << "Failed\n";
-
-    }
-    num_images++;
-  #endif  // WRITE_THRESHOLDED_REGION
-
-
-#ifdef ROBOT_DETECTOR_TIMER
-    timings.push_back(timer.elapsed_us());
-    timer.restart();
-#endif
-
-    // Step 2) - Rerun a modified colorROI to generate regions
-#ifdef CTC_2_1
-    runColorRoi(info_in, editable_middle, info_out);
-#else
     runBasepointScanner(info_in, editable_middle, info_out);
-#endif
 
-
-
-#ifdef ROBOT_DETECTOR_TIMER
-    timings.push_back(timer.elapsed_us());
-    timer.restart();
-#endif
-
-    // Step 3) - Use density based clustering to generate candidates
-#ifdef CTC_2_1
-    clusters = DBSCAN(editable_middle.roi, 70, 1);
-#else
     clusters = createClustersFromBasepoints(editable_middle.basePoints, editable_middle.basePointImageCoords);
-#endif
-    // clusters = createClustersFromRegions(editable_middle.roi);
-    //clusters = createCandidateRobots(editable_middle.roi);
-#ifdef ROBOT_DETECTOR_TIMER
-    timings.push_back(timer.elapsed_us());
-    timer.restart();
-#endif
     // Step 40 Run the classifier
     findRobots(editable_middle, info_out, clusters);
-#ifdef ROBOT_DETECTOR_TIMER
-    timings.push_back(timer.elapsed_us());
-    debugger_->outputTimings(timings, editable_middle.roi.size(), clusters.size());
-#endif
-//#ifdef ROBOT_DETECTOR_USES_VATNAO
-//    debugger_->highlightCandidates(clusters);
-//#endif
-#ifdef OUTPUT_DATA
-    debugger_->outputToFile(clusters);
-#endif
-
     delete(newTop_);
     //delete(newBot_);
 
@@ -369,29 +304,11 @@ void RobotDetector::findRobots(VisionInfoMiddle& info_mid, VisionInfoOut& info_o
         BBox bound = candidates[i].box_;
         if (bound.width() > bound.height()) continue;
 
-        #ifdef CTC_2_1
-
-        std::vector<float> features;
-        featureExtraction(info_mid, candidates[i].fbox_, features);
-        float confidence;
-        int classification = classifier_.classify(features, confidence);
-        candidates[i].isRobot_ = classification;
-        candidates[i].confidence_ = confidence;
-        if(classification == 0||confidence <= 0.7)
-            continue;
-
-        #else
-
         Eigen::MatrixXf image = imageExtraction(info_mid, candidates[i].fbox_);
         Eigen::MatrixXf resized = dnn_resize(image, 32, 32);
         int classification = dnn_predict(resized, nn);
         if (classification == 0)
             continue;
-        #endif
-
-
-
-
 
         Point(bound.b.x()-bound.a.x(), bound.b.y() + (!candidates[i].isTopCamera()*TOP_IMAGE_ROWS));
         Point feet(bound.width()/2 + bound.a.x(), bound.b.y() + (!candidates[i].isTopCamera()*TOP_IMAGE_ROWS));

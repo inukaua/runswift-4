@@ -1,38 +1,26 @@
 import robot
-from importlib import import_module
-from util.Vector2D import Vector2D
-from BehaviourTask import BehaviourTask
-from body.skills.Stand import Stand
-from body.skills.WalkInCircle import WalkInCircle
-#from body.skills.WalkInCircle import WalkInCircle
-from util.Constants import FIELD_LENGTH, PENALTY_AREA_LENGTH, CENTER_CIRCLE_DIAMETER, LEDColour
-
-from util.FieldGeometry import (
-    ENEMY_GOAL_BEHIND_CENTER,
-    ball_near_our_goal,
-    calculateTimeToReachBall,
-    calculateTimeToReachPose,
-)
-
 from util.Timer import WallTimer
 from util import LedOverride
+from BehaviourTask import BehaviourTask
+
+from body.skills.FindAndPass import FindAndPass
+from body.skills.Stand import Stand 
 
 class FieldPlayer(BehaviourTask):
     def _initialise_sub_tasks(self):
         self._sub_tasks = {
-            "Stand": Stand(self),
-            "WalkInCircle": WalkInCircle(self)
+            "Set": Stand(self),
+            "Pass": FindAndPass(self),
         }
 
     def _reset(self):
-        self._current_sub_task = "WalkInCircle"
-
+        print("STARTED!")
+        self._current_sub_task = "Pass"
+    
     def _transition(self):
+        print("Transition In FieldPlayer")
         pass
 
     def _tick(self):
-        # Tick sub task!
+        print("ticking FieldPlayer")
         self._tick_sub_task()
-
-
-
