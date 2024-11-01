@@ -12,7 +12,7 @@ from math import radians
 
 class FindAndPass(BehaviourTask):
     """
-        Description: Kick ball to other robot
+        Description: Kick ball to othr robot
         
         Detect the ball and target robot. Position self to be aligned with
         target robot and ball (collinear). Walk to kicking distance. Kick ball.
