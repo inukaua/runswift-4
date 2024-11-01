@@ -3,6 +3,7 @@ from BehaviourTask import BehaviourTask
 from body.skills.Stand import Stand
 from util.GameStatus import (
     GameState,
+    whistle_detected,
 )
 from util.Constants import LEDColour, KICKOFF_MIN_WAIT
 from audio.whistle_controller import kill_all_python_processes, start_listening_for_whistles
