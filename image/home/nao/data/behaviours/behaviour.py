@@ -67,6 +67,7 @@ def skill_instance_factory(blackboard, skill, behaviour_packages):
         skill_path = "%s.%s" % (".".join(package), skill)
         try:
             skill_module = import_module(skill_path)
+            print("Attempting to import %s from %s", skill, skill_path)
             # Access the class so we can do some reflection.
             SkillClass = getattr(skill_module, skill)
             found_skill = True

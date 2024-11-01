@@ -2,6 +2,7 @@ from BehaviourTask import BehaviourTask
 from util.actioncommand import head
 from math import radians
 from util.Global import ballHeading, ballDistance
+from body.skills.Stand import Stand
 
 
 class HeadTrackBall(BehaviourTask):
@@ -20,3 +21,4 @@ class HeadTrackBall(BehaviourTask):
         pitch = self.PITCH_BEHIND if abs(yaw) > self.BEHIND_ANGLE else pitch
 
         self.world.b_request.actions.head = head(yaw, pitch, False, 0.50, 0.2)
+        self.world.b_request.actions.body = Stand(0)

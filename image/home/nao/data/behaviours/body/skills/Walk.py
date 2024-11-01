@@ -9,7 +9,6 @@ class Walk(BehaviourTask):
     Description:
     Skill associated with directly creating the walk actioncommand.
     SPEED should be increased for serious games.
-    Currently there are issues with low SPEED values on v5 robots.
     """
 
     # Range between 0.0 and 1.0. Use 0 in lab and 1 in serious games. v5 robots
@@ -26,7 +25,7 @@ class Walk(BehaviourTask):
             # figure out how to deal with no config set
             # figure out interactions between other higher level walk functions
             # Is the config a max speed? Do higher levels overwrite
-        
+
         if cap_speed:
             speed = min(self.world.blackboard.behaviour.walkSpeed, speed)
 
