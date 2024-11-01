@@ -127,6 +127,7 @@ except ImportError:
 
 
 def check_runswift_running():
+    return True
     cmd1 = subprocess.Popen(["ps", "ax"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     data = cmd1.communicate()[0]
     lines = data.decode("utf-8").split("\n")

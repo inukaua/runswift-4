@@ -1,16 +1,15 @@
 from BehaviourTask import BehaviourTask
 from head.HeadCentre import HeadCentre
 from head.HeadLocalise import HeadLocalise
-from util.GameStatus import GameState, GamePhase, game_state, game_phase
-from util.Global import usingGameSkill, getCurrentSkill
-from util.GameStatus import we_are_kicking_team, penalised
+from head.HeadBop import HeadBop
+from util.GameStatus import whistle_detected
 
 
 class MainHeadSkill(BehaviourTask):
     def _initialise_sub_tasks(self):
         self._sub_tasks = {
             "Centre": HeadCentre(self),
-            "Localise": HeadLocalise(self),
+            "HeadBop": HeadBop(self),
         }
 
     def _reset(self):
@@ -18,7 +17,8 @@ class MainHeadSkill(BehaviourTask):
         self._is_first_time_scan = True
 
     def _transition(self):
-        if penalised():
-            self._current_sub_task = "Centre"
+        # don't know how this whistle detected is calculated
+        if whistle_detected():
+            self._current_sub_task = "HeadBop"
         else:
             self._current_sub_task = "Centre"
