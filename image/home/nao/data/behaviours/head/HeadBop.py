@@ -15,9 +15,6 @@ class HeadBop(BehaviourTask):
     A headskill associated with moving the head up and down continuously
     """
 
-    # RECORD_LENGTH = 10
-    # YAW_STDEV = radians(0.1)
-    # PITCH_STDEV = radians(0.1)
 
     def _reset(self):
         self._yaw = 0
@@ -34,9 +31,5 @@ class HeadBop(BehaviourTask):
         elapsed_time = time.time() - self._start_time
         # 2Pi is one full cycle, multiplied by the speed/frequency and elapsed_time to vary the motion with time
         next_pitch = pitch_amplitude * sin(2 * pi * self._bop_speed * elapsed_time)
-
-
-        # are the yaw and pitch records necessary to the function of head movements
-        # how to call head movements
 
         self.world.b_request.actions.head = head(0, next_pitch, False, 0, bop_speed)
