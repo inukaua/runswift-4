@@ -35,11 +35,11 @@ class Game(BehaviourTask):
     def _initialise_sub_tasks(self):
         self._sub_tasks = {
             "Stand": Stand(self),
-            "Pass": FindAndPass(self),
+            "Challenge3": FindAndPass(self),
         }
 
     def _reset(self):
-        self._current_sub_task = "Pass"
+        self._current_sub_task = "Challenge3"
 
     def _transition(self):
         pass
