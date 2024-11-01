@@ -1,8 +1,13 @@
 from BehaviourTask import BehaviourTask
+
+from head.HeadCentre import HeadCentre
+from head.HeadLocalise import HeadLocalise
+
 from head.HeadTrackBall import HeadTrackBall 
 from head.Challenge3 import Challenge3 
 from util.Timer import Timer
 from head.KSI import KSI
+
 from util.GameStatus import GameState, GamePhase, game_state, game_phase
 from util.Global import usingGameSkill, getCurrentSkill
 from util.GameStatus import we_are_kicking_team, penalised
