@@ -27,8 +27,8 @@ class Game(BehaviourTask):
 
     def _initialise_sub_tasks(self):
         self._sub_tasks = {
-            "Challenge1_Dance": Dance(self),
-            "Stand": Stand(self),
+            "Challenge1": Dance(self),
+            "Challenge2": Stand(self),
             "Challenge3": FindAndPass(self),
             "Challenge4": FieldPlayer(self)
         }
@@ -39,9 +39,9 @@ class Game(BehaviourTask):
 
     def _transition(self):
         if self.current_timer.elapsed < self.CHALLENGE1_TIME:
-            self._current_sub_task = "Challenge1_Dance"
+            self._current_sub_task = "Challenge1"
         elif self.current_timer.elapsed < self.CHALLENGE2_TIME:
-            self._current_sub_task = "Stand"
+            self._current_sub_task = "Challenge2"
         elif self.current_timer.elapsed < self.CHALLENGE3_TIME:
             self._current_sub_task = "Challenge3"
         elif self.current_timer.elapsed < self.CHALLENGE4_TIME:

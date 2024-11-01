@@ -51,20 +51,28 @@ class FindAndPass(BehaviourTask):
         
         self._tick_sub_task()
 
-        my_pos = myPos()
-        my_heading = myHeading() 
-
         try:
+            # Save the heading and distance to the robot. We do this because
+            # vision data is often unreliable, so we can use the same data for a
+            # number of frames until we detect the robot again. If you don't do
+            # this, the robot starts tweaking as it flits between tasks.
             self.robot_heading = self.world.blackboard.vision.robots[0].rr.heading
             self.robot_distance = self.world.blackboard.vision.robots[0].rr.distance
             self.detections += 1
-            # Keep track of the last 5 detections
-            
+
+            # Debug messages to sanity check that the robot actually is being detected 
             print(f"I see you (at {self.robot_heading / (3.14/180)} degrees and distance {self.robot_distance})")
         except:
+            # If no robot is detected, `self.world.blackboard.vision.robots`
+            # will be empty, causing the try block to fail into the except.
             try:
+                # If the robot has not yet been detected for the duration of the
+                # program, accesses to `self.robot_heading` should fail, causing
+                # this try block to fail.
+
+                # This point would be a good place to also find the ball's location.
                 self.robot_heading == 1 # test whether robot heading exists
-                if (self.robot_distance) < 100:
+                if (self.robot_distance) < 300:
                     self.world.b_request.actions.body = stand(0)
                     print(f"Standing")
                 else:
